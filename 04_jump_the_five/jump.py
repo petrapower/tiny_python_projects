@@ -16,7 +16,7 @@ def get_args():
         description='Jump the five',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('str',
+    parser.add_argument('text',
                         metavar='str',
                         help='Input text')
 
@@ -39,11 +39,8 @@ def main():
                     "9": "1",
                     "0": "5"}
 
-    for char in args.str:
-        if char in encoded_nums.keys():
-            print(encoded_nums[char], end='')
-        else:
-            print(char, end='')
+    for char in args.text:
+        print(encoded_nums.get(char, char), end='')
 
 
 # --------------------------------------------------
