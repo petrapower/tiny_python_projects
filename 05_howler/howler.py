@@ -6,6 +6,7 @@ Purpose: Rock the Casbah
 """
 
 import argparse
+import io
 import os.path
 import sys
 
@@ -32,8 +33,11 @@ def get_args():
 
     args = parser.parse_args()
 
+    # low-memory version to prevent opening a potentially large file all at once
     if os.path.isfile(args.text):
-        args.text = open(args.text).read().rstrip()
+        args.text = open(args.text)
+    else:
+        args.text = io.StringIO(args.text + '\n')
 
     return args
 
@@ -45,7 +49,11 @@ def main():
     args = get_args()
 
     fh_out = open(args.outfile, 'wt') if args.outfile else sys.stdout
-    fh_out.write(args.text.upper() + '\n')
+
+    # consume input line by line, instead of all at once (could be too large for memory to handle)
+    for line in args.text:
+        fh_out.write(line.upper())
+
     fh_out.close()
 
 
