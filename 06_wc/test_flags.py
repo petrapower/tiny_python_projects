@@ -144,3 +144,15 @@ def test_multiple_flags():
     rv, out = getstatusoutput(f'{prg} -wc {sonnet}')
     assert rv == 0
     assert out.rstrip() == '     118     661 ../inputs/sonnet-29.txt'
+
+
+# --------------------------------------------------
+def test_total_with_flags():
+    """Test counting total of only requested fields"""
+
+    rv, out = getstatusoutput(f'{prg} -wc {fox} {sonnet}')
+    expected = ('       9      45 ../inputs/fox.txt\n'
+                '     118     661 ../inputs/sonnet-29.txt\n'
+                '     127     706 total')
+    assert rv == 0
+    assert out.rstrip() == expected

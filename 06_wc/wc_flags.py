@@ -47,7 +47,7 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
-    any_flags_true = args.lines or args.words or args.chars
+    any_flags_set = args.lines or args.words or args.chars
 
     line_total, word_total, byte_total = 0, 0, 0
 
@@ -55,21 +55,21 @@ def main():
         item_output = ''
         line_count, word_count, byte_count = 0, 0, 0
         for line in fh:
-            if args.lines or not any_flags_true:
+            if args.lines or not any_flags_set:
                 line_count += 1
-            if args.words or not any_flags_true:
+            if args.words or not any_flags_set:
                 word_count += len(line.split())
-            if args.chars or not any_flags_true:
+            if args.chars or not any_flags_set:
                 byte_count += len(line)
-        if args.lines or not any_flags_true:
+        if args.lines or not any_flags_set:
             line_total += line_count
             item_output += f'{line_count:8}'
             fh.close()
-        if args.words or not any_flags_true:
+        if args.words or not any_flags_set:
             word_total += word_count
             item_output += f'{word_count:8}'
             fh.close()
-        if args.chars or not any_flags_true:
+        if args.chars or not any_flags_set:
             byte_total += byte_count
             item_output += f'{byte_count:8}'
             fh.close()
@@ -77,7 +77,14 @@ def main():
         fh.close()
 
     if len(args.file) > 1:
-        print(f'{line_total:8}{word_total:8}{byte_total:8} total')
+        total_output = ''
+        if args.lines or not any_flags_set:
+            total_output += f'{line_total:8}'
+        if args.words or not any_flags_set:
+            total_output += f'{word_total:8}'
+        if args.chars or not any_flags_set:
+            total_output += f'{byte_total:8}'
+        print(total_output + ' total')
 
 
 # --------------------------------------------------
