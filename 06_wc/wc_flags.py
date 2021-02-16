@@ -43,6 +43,31 @@ def get_args():
 
 
 # --------------------------------------------------
+def total_output(line_total, word_total, byte_total,
+                 lines, words, chars, any_flags_set):
+    """Outputs total to console"""
+
+    output = ''
+    if lines or not any_flags_set:
+        output += f'{line_total:8}'
+    if words or not any_flags_set:
+        output += f'{word_total:8}'
+    if chars or not any_flags_set:
+        output += f'{byte_total:8}'
+    print(output + ' total')
+
+
+# --------------------------------------------------
+def get_file_column_count(fh, text_output, column_count, column_total):
+    """Returns count as string output and number"""
+
+    column_total += column_count
+    text_output += f'{column_count:8}'
+    fh.close()
+    return text_output, column_total
+
+
+# --------------------------------------------------
 def main():
     """Make a jazz noise here"""
 
@@ -52,7 +77,7 @@ def main():
     line_total, word_total, byte_total = 0, 0, 0
 
     for fh in args.file:
-        item_output = ''
+        text_output = ''
         line_count, word_count, byte_count = 0, 0, 0
         for line in fh:
             if args.lines or not any_flags_set:
@@ -62,29 +87,18 @@ def main():
             if args.chars or not any_flags_set:
                 byte_count += len(line)
         if args.lines or not any_flags_set:
-            line_total += line_count
-            item_output += f'{line_count:8}'
-            fh.close()
+            text_output, line_total = get_file_column_count(fh, text_output, line_count, line_total)
         if args.words or not any_flags_set:
-            word_total += word_count
-            item_output += f'{word_count:8}'
-            fh.close()
+            text_output, word_total = get_file_column_count(fh, text_output, word_count, word_total)
         if args.chars or not any_flags_set:
-            byte_total += byte_count
-            item_output += f'{byte_count:8}'
-            fh.close()
-        print(item_output + ' ' + fh.name)
+            text_output, byte_total = get_file_column_count(fh, text_output, byte_count, byte_total)
+        print(text_output + ' ' + fh.name)
         fh.close()
 
     if len(args.file) > 1:
-        total_output = ''
-        if args.lines or not any_flags_set:
-            total_output += f'{line_total:8}'
-        if args.words or not any_flags_set:
-            total_output += f'{word_total:8}'
-        if args.chars or not any_flags_set:
-            total_output += f'{byte_total:8}'
-        print(total_output + ' total')
+        total_output(line_total, word_total, byte_total,
+                     args.lines, args.words, args.chars,
+                     any_flags_set)
 
 
 # --------------------------------------------------
