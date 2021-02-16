@@ -38,9 +38,7 @@ def main():
 
     args = get_args()
 
-    letters_to_lines = {}
-    for line in args.file:
-        letters_to_lines[line[0].upper()] = line.rstrip()
+    letters_to_lines = {line[0].upper(): line.rstrip() for line in args.file}
 
     for letter in args.letter:
         print(letters_to_lines.get(letter.upper(), f'I do not know \"{letter}\".'))
