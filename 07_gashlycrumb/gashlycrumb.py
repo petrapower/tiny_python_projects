@@ -19,8 +19,8 @@ def get_args():
     parser.add_argument('letter',
                         help='Letter(s)',
                         metavar='letter',
-                        type=str,
-                        default='')
+                        nargs='+',
+                        type=str)
 
     parser.add_argument('-f',
                         '--file',
@@ -37,17 +37,13 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
-    str_arg = args.arg
-    int_arg = args.int
-    file_arg = args.file
-    flag_arg = args.on
-    pos_arg = args.positional
 
-    print(f'str_arg = "{str_arg}"')
-    print(f'int_arg = "{int_arg}"')
-    print('file_arg = "{}"'.format(file_arg.name if file_arg else ''))
-    print(f'flag_arg = "{flag_arg}"')
-    print(f'positional = "{pos_arg}"')
+    letters_to_lines = {}
+    for line in args.file:
+        letters_to_lines[line[0].upper()] = line.rstrip()
+
+    for letter in args.letter:
+        print(letters_to_lines.get(letter.upper(), f'I do not know \"{letter}\".'))
 
 
 # --------------------------------------------------
