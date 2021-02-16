@@ -29,6 +29,16 @@ def get_args():
                         help='Print only number of lines in input string or file',
                         action='store_true')
 
+    parser.add_argument('-w',
+                        '--words',
+                        help='Print only number of words in input string or file',
+                        action='store_true')
+
+    parser.add_argument('-c',
+                        '--chars',
+                        help='Print only number of characters in input string or file',
+                        action='store_true')
+
     return parser.parse_args()
 
 
@@ -37,26 +47,33 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
+    any_flags_true = args.lines or args.words or args.chars
 
     line_total, word_total, byte_total = 0, 0, 0
 
     for fh in args.file:
+        item_output = ''
         line_count, word_count, byte_count = 0, 0, 0
         for line in fh:
-            if args.lines:
+            if args.lines or not any_flags_true:
                 line_count += 1
-                continue
-            line_count += 1
-            word_count += len(line.split())
-            byte_count += len(line)
-        if args.lines:
-            print(f'{line_count:8} {fh.name}')
+            if args.words or not any_flags_true:
+                word_count += len(line.split())
+            if args.chars or not any_flags_true:
+                byte_count += len(line)
+        if args.lines or not any_flags_true:
             line_total += line_count
-            continue
-        print(f'{line_count:8}{word_count:8}{byte_count:8} {fh.name}')
-        line_total += line_count
-        word_total += word_count
-        byte_total += byte_count
+            item_output += f'{line_count:8}'
+            fh.close()
+        if args.words or not any_flags_true:
+            word_total += word_count
+            item_output += f'{word_count:8}'
+            fh.close()
+        if args.chars or not any_flags_true:
+            byte_total += byte_count
+            item_output += f'{byte_count:8}'
+            fh.close()
+        print(item_output + ' ' + fh.name)
         fh.close()
 
     if len(args.file) > 1:

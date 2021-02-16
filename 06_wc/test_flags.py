@@ -108,10 +108,39 @@ def test_stdin():
 
 
 # --------------------------------------------------
-def test_two_sorted():
+def test_l_flag():
     """Test -l flag"""
 
     for flat in ['-l', '--lines']:
         rv, out = getstatusoutput(f'{prg} {flat} {sonnet}')
         assert rv == 0
         assert out.strip() == '17 ../inputs/sonnet-29.txt'
+
+
+# --------------------------------------------------
+def test_w_flag():
+    """Test -w flag"""
+
+    for flag in ['-w', '--words']:
+        rv, out = getstatusoutput(f'{prg} {flag} {sonnet}')
+        assert rv == 0
+        assert out.strip() == '118 ../inputs/sonnet-29.txt'
+
+
+# --------------------------------------------------
+def test_c_flag():
+    """Test -c flag"""
+
+    for flag in ['-c', '--chars']:
+        rv, out = getstatusoutput(f'{prg} {flag} {sonnet}')
+        assert rv == 0
+        assert out.strip() == '661 ../inputs/sonnet-29.txt'
+
+
+# --------------------------------------------------
+def test_multiple_flags():
+    """Test multiple optional flags"""
+
+    rv, out = getstatusoutput(f'{prg} -wc {sonnet}')
+    assert rv == 0
+    assert out.rstrip() == '     118     661 ../inputs/sonnet-29.txt'
