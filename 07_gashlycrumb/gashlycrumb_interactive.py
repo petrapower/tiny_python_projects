@@ -1,22 +1,27 @@
 #!/usr/bin/env python3
-"""Interactive Gashlycrumb"""
+"""
+Author : petra <petra@localhost>
+Date   : 2021-02-15
+Purpose: Rock the Casbah
+"""
 
 import argparse
+import sys
 
 
 # --------------------------------------------------
 def get_args():
-    """get command-line arguments"""
+    """Get command-line arguments"""
 
     parser = argparse.ArgumentParser(
-        description='Interactive Gashlycrumb',
+        description='Rock the Casbah',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('-f',
                         '--file',
                         help='Input file',
-                        metavar='str',
-                        type=argparse.FileType('r'),
+                        metavar='FILE',
+                        type=argparse.FileType('rt'),
                         default='gashlycrumb.txt')
 
     return parser.parse_args()
@@ -27,16 +32,17 @@ def main():
     """Make a jazz noise here"""
 
     args = get_args()
-    lookup = {line[0]: line.rstrip() for line in args.file}
 
-    while True:
-        letter = input('Please provide a letter [! to quit]: ')
+    letters_to_lines = {line[0].upper(): line.rstrip() for line in args.file}
 
-        if letter == '!':
-            print('Bye')
+    print('Please provide a letter [! to quit]: ')
+    for line in sys.stdin:
+        user_in = line.upper().rstrip()
+        if user_in == '!':
+            print("Bye")
             break
-
-        print(lookup.get(letter.upper(), f'I do not know "{letter}".'))
+        print(letters_to_lines.get(user_in.upper(), f'I do not know \"{user_in}\".'))
+        print('Please provide a letter [! to quit]: ')
 
 
 # --------------------------------------------------
